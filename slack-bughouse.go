@@ -9,8 +9,10 @@ import (
 	"time"
 )
 
-type test_struct struct {
-	Test string
+type SlackMessage struct {
+	Username string
+	text     string
+	mrkdwn   bool
 }
 
 func test(rw http.ResponseWriter, req *http.Request) {
@@ -34,7 +36,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
 		fmt.Println("There are not enough players!")
 
 	} else {
-		fmt.Println("Let the games begin!")
+		//fmt.Println("Let the games begin!")
 		t := time.Now()
 		rand.Seed(int64(t.Nanosecond())) // no shuffling without this line
 
@@ -42,8 +44,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
 			j := rand.Intn(i)
 			names[i], names[j] = names[j], names[i]
 		}
-		fmt.Println("Shuffled: ", names)
-
+		fmt.Println("Team 1 White: ", names[1], "\nTeam 1 Black: ", names[2], "\nTeam 2 Black: ", names[3], "\nTeam 2 Black: ", names[3])
 	}
 
 }
