@@ -4,9 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net/http"
-	"time"
 )
 
 type test_struct struct {
@@ -27,7 +25,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
 	log.Println(t.Test)
 }
 
-func randomizer() {
+/*func randomizer() {
 	t := time.Now()
 	rand.Seed(int64(t.Nanosecond())) // no shuffling without this line
 
@@ -36,7 +34,7 @@ func randomizer() {
 		players[i], players[j] = players[j], players[i]
 	}
 }
-
+*/
 func main() {
 	http.HandleFunc("/test", test)
 	log.Fatal(http.ListenAndServe(":9090", nil))

@@ -7,4 +7,4 @@ WORKDIR /go/src/github.com/jturpin/slack-bughouse
 
 EXPOSE 9090
 
-CMD ["go", "run", "rand-bug.go"]
+CMD ["go", "run", "slack-bughouse.go"]
