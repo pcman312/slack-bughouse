@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -12,30 +11,18 @@ type test_struct struct {
 }
 
 func test(rw http.ResponseWriter, req *http.Request) {
-	body, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		panic(err)
-	}
-	log.Println(string(body))
 
-	if req.Method == "POST" {
-		req.ParseForm()
-		token := req.Form.Get("token")
-		if token != "" {
-			fmt.Println("token is:", token)
-		} else {
-			fmt.Println("I see no token")
-		}
-		// logic part of log in
-		fmt.Println("token:", req.Form["token"])
-		fmt.Println("team_id:", req.Form["team_id"])
+	req.ParseForm()
 
-		fmt.Println("team_domain:", req.Form["team_domain"])
-		fmt.Println("user_name:", req.Form["user_name"])
-		fmt.Println("text:", req.Form["text"])
+	fmt.Printf("%+v\n", req.Form)
+	fmt.Printf("%+T\n", req.Form)
 
-	}
-
+	// logic part of log in
+	fmt.Println("token:", req.Form["token"])
+	fmt.Println("team_id:", req.Form["team_id"])
+	fmt.Println("team_domain:", req.Form["team_domain"])
+	fmt.Println("user_name:", req.Form["user_name"])
+	fmt.Println("text:", req.Form["text"])
 }
 
 func main() {
