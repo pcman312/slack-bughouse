@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type test_struct struct {
@@ -33,6 +35,14 @@ func test(rw http.ResponseWriter, req *http.Request) {
 
 	} else {
 		fmt.Println("Let the games begin!")
+		t := time.Now()
+		rand.Seed(int64(t.Nanosecond())) // no shuffling without this line
+
+		for i := len(names) - 1; i > 0; i-- {
+			j := rand.Intn(i)
+			names[i], names[j] = names[j], names[i]
+		}
+		fmt.Println("Shuffled: ", names)
 
 	}
 
