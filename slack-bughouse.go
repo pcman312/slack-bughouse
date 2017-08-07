@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -17,12 +16,6 @@ func test(rw http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 	log.Println(string(body))
-	var t test_struct
-	err = json.Unmarshal(body, &t)
-	if err != nil {
-		panic(err)
-	}
-	log.Println(t.Test)
 }
 
 func main() {
