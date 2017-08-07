@@ -25,17 +25,16 @@ func test(rw http.ResponseWriter, req *http.Request) {
 	fmt.Println(req.Form["text"][0])
 	fmt.Println("text:", req.Form["text"])
 	names := strings.Split(req.Form["text"][0], " ")
+	fmt.Printf("%T", names)
 	fmt.Println(names)
 
-	if len(names) < 3 {
+	if len(names) < 4 {
 		fmt.Println("There are not enough players!")
+
 	} else {
 		fmt.Println("Let the games begin!")
+
 	}
-
-}
-
-func randomizer(names string) {
 
 }
 
