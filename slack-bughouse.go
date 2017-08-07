@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type test_struct struct {
@@ -14,15 +15,21 @@ func test(rw http.ResponseWriter, req *http.Request) {
 
 	req.ParseForm()
 
-	fmt.Printf("%+v\n", req.Form)
-	fmt.Printf("%+T\n", req.Form)
-
-	// logic part of log in
+	/*/ Parse form values
 	fmt.Println("token:", req.Form["token"])
 	fmt.Println("team_id:", req.Form["team_id"])
 	fmt.Println("team_domain:", req.Form["team_domain"])
 	fmt.Println("user_name:", req.Form["user_name"])
 	fmt.Println("text:", req.Form["text"])
+	*/
+	fmt.Println("text:", req.Form["text"])
+	names := strings.Split(req.Form["text"], " ")
+	fmt.Println(names)
+
+}
+
+func randomizer(names string) {
+
 }
 
 func main() {
