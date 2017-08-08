@@ -12,8 +12,8 @@ import (
 )
 
 type SlackMessage struct {
-	Response_type string // always "in_channel"
-	Text          string // The generated list of players
+	Response_type string `json:"response_type"` // always "in_channel"
+	Text          string `json:"text"`          // The generated list of players
 }
 
 func test(rw http.ResponseWriter, req *http.Request) {
