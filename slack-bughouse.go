@@ -48,7 +48,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
 			        }
 		*/
 		results := "Team 1 White: " + names[0] + "\nTeam 1 Black: " + names[1] + "\nTeam 2 White: " + names[2] + "\nTeam 2 Black: " + names[3]
-		json := "{'response_type': 'in_channel','text': 'It's game time!','attachments': [{'text':" + results + "}]}"
+		json := "{\n'response_type': 'in_channel',\n'text': 'Its game time!',\n'attachments': [\n{\n'text':'" + results + "'\n}\n]\n}"
 		//            Team 1 White: " + names[0] + "\nTeam 1 Black: " + names[1] + "\nTeam 2 White: " + names[2] + "\nTeam 2 Black: " + names[3]
 		io.WriteString(rw, json)
 
