@@ -1,8 +1,9 @@
 package main
 
 import (
-	"encoding/json"
+	"bytes"
 	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"math/rand"
@@ -11,13 +12,8 @@ import (
 	"time"
 )
 
-type SlackMessage struct {
-	Response_type string `json:"response_type"` // always "in_channel"
-	Text          string `json:"text"`          // The generated list of players
-}
-
 func test(rw http.ResponseWriter, req *http.Request) {
-
+	rw.Header().Set("Content-Type", "application/json")
 	req.ParseForm()
 
 	names := strings.Split(req.Form["text"][0], " ")
@@ -36,32 +32,34 @@ func test(rw http.ResponseWriter, req *http.Request) {
 		}
 
 		// build json to send back to slack
-		/*
-					{
-			            "response_type": "in_channel",
-			            "text": "It's 80 degrees right now.",
-			            "attachments": [
-			                {
-			                    "text":"Partly cloudy today and tomorrow"
-			                }
-			            ]
-			        }
-		*/
 
-		results := "Team 1 White: " + names[0] + "\nTeam 1 Black: " + names[1] + "\nTeam 2 White: " + names[2] + "\nTeam 2 Black: " + names[3]
+		message := `{
+        "response_type": "in_channel",
+        "text": "*Would you like to play a game?*",
+        "mrkdwn": true,
+        "attachments": [
+            {
+                "text": "{{.}}",
+                "mrkdwn_in": ["text"]
+            }
+            ]
+        }`
 
-		message := SlackMessage{
-			Response_type: "in_channel",
-			Text:          results,
+		results := "*Team 1 White:* _" + names[0] + "_\n*Team 1 Black*: _" + names[1] + "_\n\n*Team 2 White:* _" + names[2] + "_\n*Team 2 Black:* _" + names[3] + "_"
+
+		tmpl, err := template.New("message").Parse(message)
+		if err != nil {
+			panic(err)
 		}
 
-		b, _ := json.Marshal(message)
+		var tpl bytes.Buffer
 
-		//fmt.Println(string(b))
+		err = tmpl.Execute(&tpl, results)
+		if err != nil {
+			panic(err)
+		}
 
-		//json := "{\n'response_type': 'in_channel',\n'text': 'Its game time!',\n'attachments': [\n{\n'text':'" + results + "'\n}\n]\n}"
-		//            Team 1 White: " + names[0] + "\nTeam 1 Black: " + names[1] + "\nTeam 2 White: " + names[2] + "\nTeam 2 Black: " + names[3]
-		io.WriteString(rw, string(b))
+		io.WriteString(rw, tpl.String())
 	}
 
 }
