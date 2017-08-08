@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func test(rw http.ResponseWriter, req *http.Request) {
+func teams(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Content-Type", "application/json")
 	req.ParseForm()
 
@@ -65,6 +65,6 @@ func test(rw http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/test", test)
+	http.HandleFunc("/teams", teams)
 	log.Fatal(http.ListenAndServe(":9090", nil))
 }
