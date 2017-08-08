@@ -11,9 +11,9 @@ import (
 )
 
 type SlackMessage struct {
-	Username string
-	text     string
-	mrkdwn   bool
+	response_type string // always "in_channel"
+	title_text    string // Header of meesage. Hardecoded to "It's game time!" for now
+	text          string // The generated list of players
 }
 
 func test(rw http.ResponseWriter, req *http.Request) {
@@ -35,8 +35,26 @@ func test(rw http.ResponseWriter, req *http.Request) {
 			names[i], names[j] = names[j], names[i]
 		}
 
+		// build json to send back to slack
+		/*
+					{
+			            "response_type": "in_channel",
+			            "text": "It's 80 degrees right now.",
+			            "attachments": [
+			                {
+			                    "text":"Partly cloudy today and tomorrow"
+			                }
+			            ]
+			        }
+		*/
 		results := "Team 1 White: " + names[0] + "\nTeam 1 Black: " + names[1] + "\nTeam 2 White: " + names[2] + "\nTeam 2 Black: " + names[3]
-		io.WriteString(rw, results)
+		json := "{'response_type': 'in_channel','text': 'It's game time!','attachments': [{'text':" + results + "}]}"
+		//            Team 1 White: " + names[0] + "\nTeam 1 Black: " + names[1] + "\nTeam 2 White: " + names[2] + "\nTeam 2 Black: " + names[3]
+		io.WriteString(rw, json)
+
+		//   Post to #bughouse Slack channel
+		//   https://hooks.slack.com/services/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
+
 	}
 
 }
