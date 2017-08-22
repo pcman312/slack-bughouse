@@ -21,7 +21,7 @@ This is very much a quick hack to get back to bughouse playing quicker. That sai
 1. Start container 
   1. `docker run -d -p 80:9090 jturpin/slack-bughouse`
 1. Use curl to hit endpoint
-  1. `curl -v http://localhost/test?text=player1%20player2%20player3%20player4`
+  1. `curl -v http://localhost/teams?text=player1%20player2%20player3%20player4`
   1. Ensure status code 200
   1. Verify Content-Type: `application/json`
   1. Verify valid json returned
