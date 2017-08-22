@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"html/template"
 	"io"
 	"log"
@@ -19,8 +18,7 @@ func teams(rw http.ResponseWriter, req *http.Request) {
 	names := strings.Split(req.Form["text"][0], " ")
 
 	if len(names) < 4 {
-		fmt.Println("There are not enough players!")
-
+		io.WriteString(rw, "There are not enough players!")
 	} else {
 		//  Let the games begin!
 		t := time.Now()
