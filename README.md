@@ -1,6 +1,6 @@
 # Bughouse Team Creator
 
-###Configuring Slack
+### Configuring Slack
 1. Create new slack app: https://api.slack.com/apps/
 1. Create new slash command in the app
   1. Command `/bughouse`
@@ -8,7 +8,7 @@
   1. Give a meaningful short description
   1. Usage hint should be `player1 player2 player3 player4`
 
-###Building / Running
+### Building / Running
 1. To pull the latest version
   1. `docker pull jturpin/slack-bughouse`
 1. To run 
