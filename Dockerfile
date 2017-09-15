@@ -1,4 +1,3 @@
-#FROM golang:1.8
 FROM golang:1.8-alpine3.6
 MAINTAINER <jim@jimturpin.com>
 
