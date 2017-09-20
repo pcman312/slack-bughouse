@@ -62,7 +62,12 @@ func teams(rw http.ResponseWriter, req *http.Request) {
 
 }
 
+func root(rw http.ResponseWriter, req *http.Request) {
+	io.WriteString(rw, "OK")
+}
+
 func main() {
+	http.HandleFunc("/", root)
 	http.HandleFunc("/teams", teams)
 	log.Fatal(http.ListenAndServe(":9090", nil))
 }
