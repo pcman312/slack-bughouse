@@ -1,8 +1,13 @@
-FROM alpine:3.6
+# build stage
+FROM golang:alpine AS build-env
+ADD . /src
+RUN cd /src && go build -o slack-bughouse
+
+# Final container
+FROM alpine
 MAINTAINER <jim@jimturpin.com>
 
-COPY slack-bughouse /slack-bughouse
-
+COPY --from=build-env /src/slack-bughouse /
 EXPOSE 9090
 
 CMD ["/slack-bughouse"]
