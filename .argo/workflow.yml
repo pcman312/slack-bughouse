@@ -1,0 +1,38 @@
+---
+type: workflow
+version: 1
+name: build-using-dind
+inputs:
+  parameters:
+    COMMIT:
+      default: "%%session.commit%%"
+    REPO:
+      default: "%%session.repo%%"
+steps:
+- CHECKOUT:
+    resources:
+      mem_mib: 500
+      cpu_cores: 0.1
+    image: argoproj/argoscm:v2.0
+    command: ["axscm"]
+    args: ["clone", "%%inputs.parameters.REPO%%", "/src", "--commit", "%%inputs.parameters.COMMIT%%"]
+    outputs:
+      artifacts:
+        CODE:
+          path: /src
+- BUILD:
+    image: "docker:1.12"
+    resources:
+      cpu_cores: 0.2
+      mem_mib: 512
+    command: ['/bin/sh', '-c', 'cd /src && docker build -f Dockerfile .']
+    inputs:
+      artifacts:
+        CODE:
+          from: "%%steps.CHECKOUT.outputs.artifacts.CODE%%"
+          path: /src
+    annotations:
+      # This annotation attaches a docker daemon to this container and allocates
+      # 10GB for graph storage, and cpu_cores, mem_mib are used for allocating those
+      # resources to the docker daemon
+      ax_ea_docker_enable: '{"graph-storage-size": "10Gi", "cpu_cores":0.5, "mem_mib":800}'

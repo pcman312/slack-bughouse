@@ -1,0 +1,18 @@
+---
+type: project
+version: 1
+name: Docker in Docker
+description: Build a docker image using Docker in Docker
+actions:
+  build using dind:
+    template: build-using-dind
+categories: ["demo", "promoted"]
+publish:
+  branches:
+    - master
+labels:
+    publisher: Jim    
+assets:
+    icon: "/icon.png"
+    publisher_icon: "/AX_Pub.png"
+    detail: "/README.md"
