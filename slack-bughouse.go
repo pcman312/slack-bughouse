@@ -1,73 +1,47 @@
 package main
 
 import (
-	"bytes"
-	"html/template"
-	"io"
+	"fmt"
 	"log"
-	"math/rand"
+	"net"
 	"net/http"
-	"strings"
-	"time"
+	"os"
+
+	"github.com/JTurpin/slack-bughouse/handlers"
 )
 
-func teams(rw http.ResponseWriter, req *http.Request) {
-	rw.Header().Set("Content-Type", "application/json")
-	req.ParseForm()
+func main() {
+	fmt.Printf("Starting slack-bughouse...\n")
 
-	names := strings.Split(req.Form["text"][0], " ")
+	fmt.Printf("===== ENVIRONMENT: =========\n")
+	for _, e := range os.Environ() {
+		fmt.Printf("%s\n", e)
+	}
+	fmt.Printf("===== DONE ENVIRONMENT =====\n")
 
-	if len(names) < 4 {
-		io.WriteString(rw, "There are not enough players!")
-	} else {
-		//  Let the games begin!
-		t := time.Now()
-		rand.Seed(int64(t.Nanosecond())) // no shuffling without this line
-
-		for i := len(names) - 1; i > 0; i-- {
-			j := rand.Intn(i)
-			names[i], names[j] = names[j], names[i]
-		}
-
-		// build json to send back to slack
-
-		message := `{
-        "response_type": "in_channel",
-        "text": "*Would you like to play a game?*",
-        "mrkdwn": true,
-        "attachments": [
-            {
-                "text": "{{.}}",
-                "mrkdwn_in": ["text"]
-            }
-            ]
-        }`
-
-		results := "*Team 1 White:* _" + names[0] + "_\n*Team 1 Black*: _" + names[1] + "_\n\n*Team 2 White:* _" + names[2] + "_\n*Team 2 Black:* _" + names[3] + "_"
-
-		tmpl, err := template.New("message").Parse(message)
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		panic(err)
+	}
+	for _, i := range ifaces {
+		addrs, err := i.Addrs()
 		if err != nil {
 			panic(err)
 		}
-
-		var tpl bytes.Buffer
-
-		err = tmpl.Execute(&tpl, results)
-		if err != nil {
-			panic(err)
+		for _, addr := range addrs {
+			var ip net.IP
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ip = v.IP
+			case *net.IPAddr:
+				ip = v.IP
+			}
+			fmt.Printf("IP: %s\n", ip.String())
 		}
-
-		io.WriteString(rw, tpl.String())
 	}
 
-}
-
-func root(rw http.ResponseWriter, req *http.Request) {
-	io.WriteString(rw, "OK")
-}
-
-func main() {
-	http.HandleFunc("/", root)
-	http.HandleFunc("/teams", teams)
+	http.HandleFunc("/", handlers.HandleRoot)
+	http.HandleFunc("/teams", handlers.HandleTeams)
+	fmt.Printf("Listening...\n")
 	log.Fatal(http.ListenAndServe(":9090", nil))
 }
