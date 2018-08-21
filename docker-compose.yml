@@ -4,3 +4,9 @@ services:
     build: .
     ports:
      - "9090:9090"
+  bughouse-test:
+    build: tests/.
+    depends_on:
+    - "slack-bughouse"
+    links:
+    - "slack-bughouse"
